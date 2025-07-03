@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Hardware - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Hardware Inventory</h1>
+                <p class="text-gray-600">View and manage all hardware</p>
+            </div>
+            <a href="/hardware/add" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-150">
+                Add Hardware
+            </a>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <input type="text" placeholder="Search hardware..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Types</option>
+                    <option>Laptop</option>
+                    <option>Desktop</option>
+                    <option>Printer</option>
+                    <option>Server</option>
+                </select>
+                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Makes</option>
+                    <option>Dell</option>
+                    <option>HP</option>
+                    <option>Lenovo</option>
+                    <option>Apple</option>
+                </select>
+                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Status</option>
+                    <option>Available</option>
+                    <option>In Use</option>
+                    <option>Under Maintenance</option>
+                    <option>Retired</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Hardware Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hardware</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serial Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Make</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Origin Dept</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Location</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% if (hardware && hardware.length > 0) { %>
+                            <% hardware.forEach(function(item) { %>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900"><%= item.serialNumber %></div>
+                                        <div class="text-sm text-gray-500"><%= item.gatePass || 'No gate pass' %></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900 font-mono"><%= item.serialNumber %></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900"><%= item.type.name %></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900"><%= item.make.name %></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900"><%= item.originDepartment.name %></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            <% if (item.status === 'Active') { %>bg-green-100 text-green-800<% } %>
+                                            <% if (item.status === 'Inactive') { %>bg-gray-100 text-gray-800<% } %>
+                                            <% if (item.status === 'Lost') { %>bg-red-100 text-red-800<% } %>
+                                            <% if (item.status === 'Damaged') { %>bg-yellow-100 text-yellow-800<% } %>
+                                            <% if (item.status === 'Maintenance') { %>bg-blue-100 text-blue-800<% } %>">
+                                            <%= item.status %>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            <% if (item.locationHistory && item.locationHistory.length > 0) { %>
+                                                <%= item.locationHistory[item.locationHistory.length - 1].location %>
+                                            <% } else { %>
+                                                Not assigned
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="/hardware/view/<%= item._id %>" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
+                                        <a href="/hardware/edit/<%= item._id %>" class="text-green-600 hover:text-green-900 mr-3">Edit</a>
+                                        <a href="/hardware/delete/<%= item._id %>" class="text-red-600 hover:text-red-900">Delete</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                                    No hardware found. <a href="/hardware/add" class="text-blue-600 hover:text-blue-900">Add your first hardware</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html> 

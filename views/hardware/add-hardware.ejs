@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Hardware - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Add Hardware</h1>
+            <p class="text-gray-600">Add new hardware to inventory</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <form action="/hardware/add" method="POST">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div>
+                                <label for="serialNumber" class="block text-sm font-medium text-gray-700 mb-2">Serial Number *</label>
+                                <input type="text" id="serialNumber" name="serialNumber" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                       placeholder="e.g., DL5520-001">
+                            </div>
+                            
+                            <div>
+                                <label for="hardwareDate" class="block text-sm font-medium text-gray-700 mb-2">Date *</label>
+                                <input type="date" id="hardwareDate" name="hardwareDate" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                                                    <div>
+                                <label for="gatePass" class="block text-sm font-medium text-gray-700 mb-2">Gate Pass</label>
+                                <input type="text" id="gatePass" name="gatePass" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                       placeholder="Gate pass number (optional)">
+                            </div>
+                            
+                            <div>
+                                <label for="gatePassDate" class="block text-sm font-medium text-gray-700 mb-2">Gate Pass Date</label>
+                                <input type="date" id="gatePassDate" name="gatePassDate" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Hardware Type *</label>
+                            <select id="type" name="type" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Type</option>
+                                <% hardwareTypes.forEach(function(type) { %>
+                                    <option value="<%= type._id %>"><%= type.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="make" class="block text-sm font-medium text-gray-700 mb-2">Hardware Make *</label>
+                            <select id="make" name="make" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Make</option>
+                                <% hardwareMakes.forEach(function(make) { %>
+                                    <option value="<%= make._id %>"><%= make.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="originDepartment" class="block text-sm font-medium text-gray-700 mb-2">Origin Department *</label>
+                            <select id="originDepartment" name="originDepartment" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Department</option>
+                                <% departments.forEach(function(dept) { %>
+                                    <option value="<%= dept._id %>"><%= dept.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="status" name="status" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Lost">Lost</option>
+                                <option value="Damaged">Damaged</option>
+                                <option value="Maintenance">Under Maintenance</option>
+                            </select>
+                        </div>
+                        
+
+                        
+                        <div class="md:col-span-2">
+                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                            <textarea id="notes" name="notes" rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      placeholder="Additional notes about the hardware..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mt-8">
+                        <a href="/hardware/view" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-150">
+                            Cancel
+                        </a>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-150">
+                            Add Hardware
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html> 

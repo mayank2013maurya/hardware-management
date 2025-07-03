@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Employee Details</h1>
+            <p class="text-gray-600">View employee information and assignments</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800"><%= employee.name %></h2>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Employee Information</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.name %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Employee ID</label>
+                                    <p class="mt-1 text-sm text-gray-900 font-mono"><%= employee.employeeId %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.email %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Phone</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.phone || 'N/A' %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Department</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.department.name %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Position</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.position || 'N/A' %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Created Date</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= new Date(employee.createdAt).toLocaleDateString() %></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Assignment Summary</h3>
+                            <div class="space-y-4">
+                                <% 
+                                    const activeAssignments = employee.assignments ? 
+                                        employee.assignments.filter(a => a.status === 'active') : [];
+                                    const returnedAssignments = employee.assignments ? 
+                                        employee.assignments.filter(a => a.status === 'returned') : [];
+                                %>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Active Assignments</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= activeAssignments.length %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Returned Assignments</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= returnedAssignments.length %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Total Assignments</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= employee.assignments ? employee.assignments.length : 0 %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (employee.assignments && employee.assignments.length > 0) { %>
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Hardware Assignments</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hardware</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignment Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Return</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <% employee.assignments.forEach(function(assignment, index) { %>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    <a href="/hardware/view/<%= assignment.hardware._id %>" class="text-blue-600 hover:text-blue-900">
+                                                        <%= assignment.hardware.serialNumber %>
+                                                    </a>
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                    <%= assignment.hardware.type.name %> <%= assignment.hardware.make.name %>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900"><%= new Date(assignment.assignmentDate).toLocaleDateString() %></div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">
+                                                    <%= assignment.expectedReturnDate ? new Date(assignment.expectedReturnDate).toLocaleDateString() : 'N/A' %>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                    <% if (assignment.status === 'active') { %>bg-green-100 text-green-800<% } %>
+                                                    <% if (assignment.status === 'returned') { %>bg-gray-100 text-gray-800<% } %>
+                                                    <% if (assignment.status === 'pending') { %>bg-yellow-100 text-yellow-800<% } %>">
+                                                    <%= assignment.status %>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <% if (assignment.status === 'active') { %>
+                                                    <a href="/employee/return/<%= employee._id %>/<%= index %>" class="text-red-600 hover:text-red-900">Return</a>
+                                                <% } else { %>
+                                                    <span class="text-gray-400">Returned</span>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <% } %>
+
+                    <div class="mt-8 flex justify-end space-x-4">
+                        <a href="/employee/view" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-150">
+                            Back to Employees
+                        </a>
+                        <a href="/employee/assign/<%= employee._id %>" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-150">
+                            Assign Hardware
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html> 

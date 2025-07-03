@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Hardware Makes - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Hardware Makes</h1>
+                <p class="text-gray-600">Manage and view all hardware makes</p>
+            </div>
+            <a href="/hardware/make/add" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-150">
+                Add Hardware Make
+            </a>
+        </div>
+
+        <!-- Flash Messages -->
+        <% if (typeof messages !== 'undefined' && messages.success) { %>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <%= messages.success %>
+            </div>
+        <% } %>
+        <% if (typeof messages !== 'undefined' && messages.error) { %>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <%= messages.error %>
+            </div>
+        <% } %>
+
+        <!-- Search and Filter -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <input type="text" id="searchInput" placeholder="Search hardware makes..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Hardware Makes Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hardware Make Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="hardwareMakesTable">
+                        <% if (hardwareMakes && hardwareMakes.length > 0) { %>
+                            <% hardwareMakes.forEach(hardwareMake => { %>
+                                <tr class="hardware-make-row">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <a href="/hardware/make/view/<%= hardwareMake._id %>" class="text-blue-600 hover:text-blue-900">
+                                                <%= hardwareMake.name %>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            <%= new Date(hardwareMake.createdAt).toLocaleDateString() %>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="/hardware/make/view/<%= hardwareMake._id %>" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
+                                        <a href="/hardware/make/edit/<%= hardwareMake._id %>" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                        <a href="/hardware/make/delete/<%= hardwareMake._id %>" class="text-red-600 hover:text-red-900">Delete</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                                    No hardware makes found. <a href="/hardware/make/add" class="text-blue-600 hover:text-blue-900">Add your first hardware make</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.hardware-make-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

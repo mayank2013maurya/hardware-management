@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h1>
+            <p class="text-gray-600">Complete hardware inventory management with real-time data</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Hardware</p>
+                        <p class="text-2xl font-semibold text-gray-900"><%= data && data.stats ? data.stats.totalHardware : 0 %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Available</p>
+                        <p class="text-2xl font-semibold text-gray-900"><%= data && data.stats ? data.stats.available : 0 %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">In Use</p>
+                        <p class="text-2xl font-semibold text-gray-900"><%= data && data.stats ? data.stats.inUse : 0 %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100 text-red-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Under Maintenance</p>
+                        <p class="text-2xl font-semibold text-gray-900"><%= data && data.stats ? data.stats.underMaintenance : 0 %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Filters & Search</h2>
+            <form method="GET" action="/" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                <!-- Search -->
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" name="search" value="<%= filters && filters.search ? filters.search : '' %>" 
+                           placeholder="Serial number, gate pass, notes..." 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Status Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" <%= !filters || !filters.status || filters.status === 'all' ? 'selected' : '' %>>All Status</option>
+                        <option value="Active" <%= filters && filters.status === 'Active' ? 'selected' : '' %>>Active</option>
+                        <option value="Inactive" <%= filters && filters.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                        <option value="Lost" <%= filters && filters.status === 'Lost' ? 'selected' : '' %>>Lost</option>
+                        <option value="Damaged" <%= filters && filters.status === 'Damaged' ? 'selected' : '' %>>Damaged</option>
+                        <option value="Maintenance" <%= filters && filters.status === 'Maintenance' ? 'selected' : '' %>>Maintenance</option>
+                    </select>
+                </div>
+
+                <!-- Department Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <select name="department" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" <%= !filters || !filters.department || filters.department === 'all' ? 'selected' : '' %>>All Departments</option>
+                        <% if (data && data.filterOptions && data.filterOptions.departments) { %>
+                            <% data.filterOptions.departments.forEach(dept => { %>
+                                <option value="<%= dept._id %>" <%= filters && filters.department === dept._id.toString() ? 'selected' : '' %>><%= dept.name %></option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <!-- Type Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" <%= !filters || !filters.type || filters.type === 'all' ? 'selected' : '' %>>All Types</option>
+                        <% if (data && data.filterOptions && data.filterOptions.hardwareTypes) { %>
+                            <% data.filterOptions.hardwareTypes.forEach(type => { %>
+                                <option value="<%= type._id %>" <%= filters && filters.type === type._id.toString() ? 'selected' : '' %>><%= type.name %></option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <!-- Make Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Make</label>
+                    <select name="make" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" <%= !filters || !filters.make || filters.make === 'all' ? 'selected' : '' %>>All Makes</option>
+                        <% if (data && data.filterOptions && data.filterOptions.hardwareMakes) { %>
+                            <% data.filterOptions.hardwareMakes.forEach(make => { %>
+                                <option value="<%= make._id %>" <%= filters && filters.make === make._id.toString() ? 'selected' : '' %>><%= make.name %></option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="lg:col-span-6 flex gap-2">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Apply Filters
+                    </button>
+                    <a href="/" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <a href="/hardware/add" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-150">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-900">Add Hardware</p>
+                        <p class="text-sm text-gray-500">Add new hardware</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="/hardware/view" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-150">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-900">View Hardware</p>
+                        <p class="text-sm text-gray-500">Browse all hardware</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="/deployment/add" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-150">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-900">Deploy Hardware</p>
+                        <p class="text-sm text-gray-500">Assign to users</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="/deployment/view" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-150">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-900">View Deployments</p>
+                        <p class="text-sm text-gray-500">Track assignments</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Hardware Inventory Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800">Hardware Inventory (<%= data && data.hardware ? data.hardware.length : 0 %> items)</h2>
+            </div>
+            
+            <% if (!data || !data.hardware || data.hardware.length === 0) { %>
+                <div class="p-8 text-center">
+                    <p class="text-gray-500">No hardware found. Add some hardware to get started!</p>
+                    <a href="/hardware/add" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Add Hardware
+                    </a>
+                </div>
+            <% } else { %>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hardware</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Location</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Action</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <% data.hardware.forEach(hw => { %>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900"><%= hw.serialNumber %></div>
+                                            <div class="text-sm text-gray-500">
+                                                <%= hw.type && hw.type.name ? hw.type.name : 'Unknown' %> - <%= hw.make && hw.make.name ? hw.make.name : 'Unknown' %>
+                                            </div>
+                                            <% if (hw.gatePass) { %>
+                                                <div class="text-xs text-gray-400">Gate Pass: <%= hw.gatePass %></div>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                            <%= hw.status === 'Active' ? 'bg-green-100 text-green-800' : '' %>
+                                            <%= hw.status === 'Inactive' ? 'bg-gray-100 text-gray-800' : '' %>
+                                            <%= hw.status === 'Lost' ? 'bg-red-100 text-red-800' : '' %>
+                                            <%= hw.status === 'Damaged' ? 'bg-red-100 text-red-800' : '' %>
+                                            <%= hw.status === 'Maintenance' ? 'bg-yellow-100 text-yellow-800' : '' %>">
+                                            <%= hw.status || 'Unknown' %>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <% if (hw.currentDeployment) { %>
+                                            <div class="text-sm text-gray-900">
+                                                <span class="font-medium">Deployed to:</span> <%= hw.currentDeployment.department && hw.currentDeployment.department.name ? hw.currentDeployment.department.name : 'Unknown' %>
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                Since: <%= new Date(hw.currentDeployment.deploymentDate).toLocaleDateString() %>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="text-sm text-gray-900">
+                                                <span class="font-medium">Available</span>
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                Origin: <%= hw.originDepartment && hw.originDepartment.name ? hw.originDepartment.name : 'Unknown' %>
+                                            </div>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            <%= hw.lastAction && hw.lastAction.typeOfAction ? hw.lastAction.typeOfAction.charAt(0).toUpperCase() + hw.lastAction.typeOfAction.slice(1) : 'Unknown' %>
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            <%= hw.lastAction && hw.lastAction.date ? new Date(hw.lastAction.date).toLocaleDateString() : 'Unknown' %>
+                                        </div>
+                                        <% if (hw.lastAction && hw.lastAction.notes) { %>
+                                            <div class="text-xs text-gray-400"><%= hw.lastAction.notes %></div>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex space-x-2">
+                                            <a href="/hardware/view/<%= hw._id %>" class="text-blue-600 hover:text-blue-900">View</a>
+                                            <a href="/hardware/edit/<%= hw._id %>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                            <% if (hw.currentDeployment) { %>
+                                                <a href="/deployment/return/<%= hw.currentDeployment._id %>" class="text-green-600 hover:text-green-900">Return</a>
+                                            <% } else { %>
+                                                <a href="/deployment/add?hardware=<%= hw._id %>" class="text-yellow-600 hover:text-yellow-900">Deploy</a>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+            <div class="space-y-4">
+                <% if (!data || !data.recentActivity || data.recentActivity.length === 0) { %>
+                    <p class="text-gray-500">No recent activity.</p>
+                <% } else { %>
+                    <% data.recentActivity.forEach(activity => { %>
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                            <div class="w-2 h-2 bg-<%= activity.color %>-500 rounded-full mr-3"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900"><%= activity.message %></p>
+                                <p class="text-xs text-gray-500"><%= new Date(activity.time).toLocaleString() %></p>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html> 

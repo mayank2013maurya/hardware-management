@@ -1,0 +1,205 @@
+<nav class="bg-gray-800 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- App Title -->
+            <div class="flex items-center">
+                <h1 class="text-xl font-bold text-white">Hardware Management App</h1>
+            </div>
+
+            <!-- User Info -->
+            <% if (user) { %>
+            <div class="flex items-center text-sm text-gray-300">
+                <i class="fas fa-user mr-2"></i>
+                Welcome, <%= user.username %>
+            </div>
+            <% } %>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <!-- Dashboard -->
+                    <a href="/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                        Dashboard
+                    </a>
+
+                    <!-- Department Dropdown -->
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out flex items-center">
+                            Department
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-1">
+                                <a href="/department/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Department</a>
+                                <a href="/department/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Department</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hardware Dropdown -->
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out flex items-center">
+                            Hardware
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-1">
+                                <a href="/hardware/type/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Hardware Type</a>
+                                <a href="/hardware/type/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Hardware Type</a>
+                                <a href="/hardware/make/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Hardware Make</a>
+                                <a href="/hardware/make/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Hardware Make</a>
+                                <a href="/hardware/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Hardware</a>
+                                <a href="/hardware/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Hardware</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deployment Dropdown -->
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out flex items-center">
+                            Deployment
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-1">
+                                <a href="/deployment/add" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Deployment</a>
+                                <a href="/deployment/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Deployment</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Import/Export Link -->
+                    <a href="/import-export" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                        Import/Export
+                    </a>
+
+                    <!-- Logout Button -->
+                    <form action="/logout" method="POST" class="inline">
+                        <button type="submit" class="ml-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                            <i class="fas fa-sign-out-alt mr-1"></i>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none focus:text-white">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+                
+                <!-- Mobile Department -->
+                <div class="relative">
+                    <button id="mobile-department-btn" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left flex justify-between items-center">
+                        Department
+                        <svg class="h-4 w-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-department-menu" class="hidden pl-4">
+                        <a href="/department/view" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">View Department</a>
+                        <a href="/department/add" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">Add Department</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Hardware -->
+                <div class="relative">
+                    <button id="mobile-hardware-btn" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left flex justify-between items-center">
+                        Hardware
+                        <svg class="h-4 w-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-hardware-menu" class="hidden pl-4">
+                        <a href="/hardware/type/add" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">Add Hardware Type</a>
+                        <a href="/hardware/type/view" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">View Hardware Type</a>
+                        <a href="/hardware/make/view" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">View Hardware Make</a>
+                        <a href="/hardware/make/add" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">Add Hardware Make</a>
+                        <a href="/hardware/add" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">Add Hardware</a>
+                        <a href="/hardware/view" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">View Hardware</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Deployment -->
+                <div class="relative">
+                    <button id="mobile-deployment-btn" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left flex justify-between items-center">
+                        Deployment
+                        <svg class="h-4 w-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-deployment-menu" class="hidden pl-4">
+                        <a href="/deployment/add" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">Add Deployment</a>
+                        <a href="/deployment/view" class="text-gray-400 hover:text-white block px-3 py-2 rounded-md text-sm">View Deployment</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Import/Export -->
+                <a href="/import-export" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Import/Export</a>
+
+                <!-- Logout Button (Mobile) -->
+                <form action="/logout" method="POST" class="block">
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-base font-medium transition duration-150 ease-in-out mt-1">
+                        <i class="fas fa-sign-out-alt mr-1"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- JavaScript for mobile menu functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    // Mobile menu toggle
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Mobile dropdown toggles
+    const mobileDepartmentBtn = document.getElementById('mobile-department-btn');
+    const mobileDepartmentMenu = document.getElementById('mobile-department-menu');
+    const mobileHardwareBtn = document.getElementById('mobile-hardware-btn');
+    const mobileHardwareMenu = document.getElementById('mobile-hardware-menu');
+    const mobileDeploymentBtn = document.getElementById('mobile-deployment-btn');
+    const mobileDeploymentMenu = document.getElementById('mobile-deployment-menu');
+
+    mobileDepartmentBtn.addEventListener('click', function() {
+        mobileDepartmentMenu.classList.toggle('hidden');
+        const svg = this.querySelector('svg');
+        svg.classList.toggle('rotate-180');
+    });
+
+    mobileHardwareBtn.addEventListener('click', function() {
+        mobileHardwareMenu.classList.toggle('hidden');
+        const svg = this.querySelector('svg');
+        svg.classList.toggle('rotate-180');
+    });
+
+    mobileDeploymentBtn.addEventListener('click', function() {
+        mobileDeploymentMenu.classList.toggle('hidden');
+        const svg = this.querySelector('svg');
+        svg.classList.toggle('rotate-180');
+    });
+});
+</script>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Details - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Deployment Details</h1>
+            <p class="text-gray-600">View deployment information</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Deployment Information</h2>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Hardware Information</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Serial Number</label>
+                                    <p class="mt-1 text-sm text-gray-900 font-mono">
+                                        <a href="/hardware/view/<%= deployment.hardware._id %>" class="text-blue-600 hover:text-blue-900">
+                                            <%= deployment.hardware.serialNumber %>
+                                        </a>
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Gate Pass</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= deployment.hardware.gatePass || 'N/A' %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Hardware Type</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= deployment.hardware.type.name %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Hardware Make</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= deployment.hardware.make.name %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Origin Department</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= deployment.hardware.originDepartment.name %></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Deployment Information</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Department</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= deployment.department.name %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Deployment Date</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= new Date(deployment.deploymentDate).toLocaleDateString() %></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Deployment Type</label>
+                                    <p class="mt-1 text-sm text-gray-900 capitalize"><%= deployment.deploymentType %></p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        <% if (deployment.status === 'active') { %>bg-green-100 text-green-800<% } %>
+                                        <% if (deployment.status === 'pending') { %>bg-yellow-100 text-yellow-800<% } %>
+                                        <% if (deployment.status === 'returned') { %>bg-gray-100 text-gray-800<% } %>">
+                                        <%= deployment.status %>
+                                    </span>
+                                </div>
+                                <% if (deployment.expectedReturnDate) { %>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Expected Return Date</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= new Date(deployment.expectedReturnDate).toLocaleDateString() %></p>
+                                </div>
+                                <% } %>
+                                <% if (deployment.actualReturnDate) { %>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Actual Return Date</label>
+                                    <p class="mt-1 text-sm text-gray-900"><%= new Date(deployment.actualReturnDate).toLocaleDateString() %></p>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (deployment.notes) { %>
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Notes</h3>
+                        <div class="bg-gray-50 rounded-md p-4">
+                            <p class="text-sm text-gray-900 whitespace-pre-wrap"><%= deployment.notes %></p>
+                        </div>
+                    </div>
+                    <% } %>
+
+                    <div class="mt-8 flex justify-end space-x-4">
+                        <a href="/deployment/view" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-150">
+                            Back to Deployments
+                        </a>
+                        <a href="/deployment/edit/<%= deployment._id %>" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-150">
+                            Edit Deployment
+                        </a>
+                        <% if (deployment.status === 'active' || deployment.status === 'pending') { %>
+                            <a href="/deployment/return/<%= deployment._id %>" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150">
+                                Return Hardware
+                            </a>
+                        <% } %>
+                        <a href="/deployment/delete/<%= deployment._id %>" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150">
+                            Delete Deployment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html> 

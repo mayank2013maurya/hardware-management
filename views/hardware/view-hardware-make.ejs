@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Make Details - Hardware Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <%- include('../partials/navbar') %>
+
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Hardware Make Details</h1>
+                    <p class="text-gray-600">View hardware make information</p>
+                </div>
+                <div class="flex space-x-3">
+                    <a href="/hardware/make/edit/<%= hardwareMake._id %>" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-150">
+                        Edit
+                    </a>
+                    <a href="/hardware/make/delete/<%= hardwareMake._id %>" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-150">
+                        Delete
+                    </a>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800"><%= hardwareMake.name %></h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Hardware Make Name</dt>
+                                <dd class="mt-1 text-sm text-gray-900"><%= hardwareMake.name %></dd>
+                            </div>
+                            
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Created Date</dt>
+                                <dd class="mt-1 text-sm text-gray-900"><%= new Date(hardwareMake.createdAt).toLocaleDateString() %></dd>
+                            </div>
+                            
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                                <dd class="mt-1 text-sm text-gray-900"><%= new Date(hardwareMake.updatedAt).toLocaleDateString() %></dd>
+                            </div>
+                            
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">ID</dt>
+                                <dd class="mt-1 text-sm text-gray-900 font-mono"><%= hardwareMake._id %></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <a href="/hardware/make/view" 
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition duration-150">
+                        Back to Hardware Makes
+                    </a>
+                    <div class="flex space-x-3">
+                        <a href="/hardware/make/edit/<%= hardwareMake._id %>" 
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-150">
+                            Edit Hardware Make
+                        </a>
+                        <a href="/hardware/make/delete/<%= hardwareMake._id %>" 
+                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-150">
+                            Delete Hardware Make
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+</body>
+
+</html> 
